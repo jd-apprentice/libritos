@@ -2,7 +2,7 @@
 
 ![idea](design/images/idea.png)
 
-#  Folder structure
+# 📁 Folder structure
 
 ```
 🌳 libritos/
