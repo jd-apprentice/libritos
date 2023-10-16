@@ -1,5 +1,6 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import { config } from './config/index.js';
+import { db } from './config/database.js';
 
 /**
  @description
@@ -20,15 +21,21 @@ const client = new Client({
 });
 
 
-client.on('ready', () => {
+client.on('ready', async () => {
+    db.connection();
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
-    // The idea here is to only react to messages in a specific channel so we can send files there
     if (message.channelId !== config.channelId) {
+        return;
+    }
+
+    const attachment = message.attachments.first()?.url;
+    if (!attachment) {
+        await message.reply('Please send a file');
         return;
     }
 
@@ -37,11 +44,27 @@ client.on('messageCreate', async (message) => {
         return;
     }
 
-    const attachment = message.attachments.first().url;
-    if (!attachment) {
-        await message.reply('Please send a file');
+    if (!message.attachments.first().contentType !== config.allowedFormarts) {
+        await message.reply('Please send a valid file');
         return;
     }
+
+    const query = await db
+        .insertInto('books')
+        .values({
+            name: message.attachments.first().name,
+            url: message.attachments.first().url,
+            description: message.content,
+        })
+        .execute()
+
+    if (!query) {
+        await message.reply('Error saving file');
+        return;
+    }
+
+    await message.reply('File saved');
+    return;
 });
 
 client.login(config.TOKEN);
