@@ -1,7 +1,12 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import { config } from './config/index.js';
 import { db } from './config/database.js';
-import { isBot, isNotSelectedChannel, hasMoreThanOneAttachment, fileExists } from './utils/validations.js';
+import {
+    isBot,
+    isNotSelectedChannel,
+    hasMoreThanOneAttachment,
+    fileExists, moreThan20MB
+} from './utils/validations.js';
 
 export class LibraryBot {
     constructor(options = {}) {
@@ -46,6 +51,11 @@ export class LibraryBot {
 
         if (!config.allowedFormarts.includes(contentType)) {
             await message.reply('Please send a valid file');
+            return;
+        }
+
+        if (moreThan20MB(message)) {
+            await message.reply('Please send a file smaller than 20MB');
             return;
         }
 
