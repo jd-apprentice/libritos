@@ -1,0 +1,16 @@
+{
+  "name": "libritos",
+  "version": "1.0.0",
+  "description": "libritos bot",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node --watch --env-file=.env ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.13.0"
+  }
+}
