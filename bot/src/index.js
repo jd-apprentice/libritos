@@ -2,6 +2,7 @@ import { Client, GatewayIntentBits } from 'discord.js';
 import { config } from './config/index.js';
 import { db } from './config/database.js';
 import { isBot, isNotSelectedChannel, hasMoreThanOneAttachment, fileExists } from './utils/validations.js';
+
 export class LibraryBot {
     constructor(options = {}) {
         this._options = options;
@@ -13,7 +14,7 @@ export class LibraryBot {
             ],
         });
 
-        this._client.login(config.TOKEN);
+        this._client.login(config.token);
         this._client.on('ready', this._onReady.bind(this));
         this._client.on('messageCreate', this._onMessage.bind(this));
     }
@@ -49,7 +50,7 @@ export class LibraryBot {
         }
 
         const query = await db
-            .insertInto('books')
+            .insertInto(config.booksTable)
             .values({
                 name,
                 url,
