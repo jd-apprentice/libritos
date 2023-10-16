@@ -1,6 +1,6 @@
 # 📚 Libritos
 
-![idea](design/images/idea.png)
+![idea](infra/design/images/idea.png)
 
 # 📁 Folder structure
 
