@@ -111,7 +111,7 @@ export class LibraryBot {
         const query = await db
             .insertInto(this._config.booksTable)
             .values({
-                name,
+                name: name.replace('.pdf', ''),
                 url,
                 description: message.content,
             })

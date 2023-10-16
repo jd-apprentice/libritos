@@ -1,0 +1,19 @@
+version: "3.1"
+services:
+  bot:
+    container_name: bot_container
+    build:
+      context: ../bot
+      dockerfile: ../infra/images/bot.Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+
+  back:
+    container_name: be_container
+    build:
+      context: ../back
+      dockerfile: ../infra/images/be.Dockerfile
+    restart: unless-stopped
+    ports:
+      - 3000:3000

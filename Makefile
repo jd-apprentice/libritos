@@ -1,4 +1,4 @@
 ## BOT
 
 development:
-	cd bot && npm run start
+	cd bot && npm run dev
