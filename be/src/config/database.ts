@@ -1,6 +1,6 @@
 import { Kysely } from "kysely";
 import { LibsqlDialect } from "@libsql/kysely-libsql";
-import { Database } from "./types";
+import { Database } from "../@types";
 
 export const db = new Kysely<Database>({
     dialect: new LibsqlDialect({

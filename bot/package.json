@@ -5,8 +5,8 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "start": "bun run src/index.js",
-    "dev": "bun run --watch example.js"
+    "start": "bun src/index.js",
+    "dev": "bun --watch example.js"
   },
   "keywords": [],
   "author": "Jonathan Dyallo",

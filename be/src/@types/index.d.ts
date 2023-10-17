@@ -26,3 +26,9 @@ export interface BookTable {
 export type Book = Selectable<BookTable>
 export type NewBook = Insertable<BookTable>
 export type BookUpdate = Updateable<BookTable>
+
+export interface Book {
+    name: string;
+    description?: string;
+    url: string;
+}

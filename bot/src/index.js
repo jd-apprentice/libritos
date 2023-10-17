@@ -36,6 +36,7 @@ import {
     hasMoreThanOneAttachment,
     fileExists, moreThan20MB
 } from './utils/validations.js';
+import { nameGenerator } from './utils/generators.js';
 
 /**
  * @example
@@ -111,7 +112,7 @@ export class LibraryBot {
         const query = await db
             .insertInto(this._config.booksTable)
             .values({
-                name: name.replace('.pdf', ''),
+                name: nameGenerator(name),
                 url,
                 description: message.content,
             })
