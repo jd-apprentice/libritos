@@ -7,7 +7,7 @@ services:
       dockerfile: ../infra/images/bot.Dockerfile
     restart: unless-stopped
     env_file:
-      - .env
+      - ../bot/.env
 
   back:
     container_name: be_container
@@ -17,3 +17,5 @@ services:
     restart: unless-stopped
     ports:
       - 3000:3000
+    env_file:
+      - ../be/.env

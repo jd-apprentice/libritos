@@ -57,6 +57,7 @@ import { nameGenerator } from './utils/generators.js';
     @returns {void}
  */
 
+// https://github.com/oven-sh/bun/issues/4760#issuecomment-1712752276
 export class LibraryBot {
     constructor(options = {}) {
         this._options = options;

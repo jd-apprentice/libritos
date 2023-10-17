@@ -1,6 +1,6 @@
 import cors from "@elysiajs/cors";
-import { Elysia } from "elysia";
 import { html } from '@elysiajs/html'
+import { Elysia } from "elysia";
 import { db } from "./config/database";
 import { generateHTML } from "./utils/template";
 

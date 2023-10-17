@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "libritos bot",
   "type": "module",
-  "main": "src/index.js",
+  "main": "dist/server.js",
   "scripts": {
-    "start": "bun src/index.js",
-    "dev": "bun --watch example.js"
+    "build": "bun build --target=bun ./src/index.js --outfile=./dist/server.js",
+    "start": "bun bot.js",
+    "dev": "bun --watch bot.js"
   },
   "keywords": [],
   "author": "Jonathan Dyallo",
