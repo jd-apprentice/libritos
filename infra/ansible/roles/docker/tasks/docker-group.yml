@@ -1,0 +1,11 @@
+- name: add docker group
+  group:
+    name: docker
+    state: present
+
+- name: add ubuntu to docker group
+  become: yes
+  user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: yes

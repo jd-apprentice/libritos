@@ -1,0 +1,6 @@
+---
+- name: Update system and install docker
+  hosts: debian
+
+- name: Include update and install playbook
+  ansible.builtin.import_playbook: ../playbooks/update-and-install.yml

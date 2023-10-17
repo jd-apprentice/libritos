@@ -1,0 +1,15 @@
+---
+- name: Update the system and install Docker, Docker Compose, and add the current user to the Docker group
+  hosts: debian
+  tasks:
+    - name: Include prepare playbook
+      ansible.builtin.include_tasks:
+        file: ../roles/system/tasks/debian-update.yml
+    
+    - name: Include install playbook
+      ansible.builtin.include_tasks:
+        file: ../roles/docker/tasks/install.yml
+
+    - name: Include add user to docker group playbook
+      ansible.builtin.include_tasks:
+        file: ../roles/docker/tasks/docker-group.yml
