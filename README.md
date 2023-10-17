@@ -2,6 +2,8 @@
 
 ![idea](infra/design/images/idea.png)
 
+![design](web.png)
+
 # 📁 Folder structure
 
 ```
