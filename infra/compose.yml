@@ -12,7 +12,7 @@ services:
   back:
     container_name: be_container
     build:
-      context: ../back
+      context: ../be
       dockerfile: ../infra/images/be.Dockerfile
     restart: unless-stopped
     ports:
