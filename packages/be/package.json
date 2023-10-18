@@ -2,8 +2,7 @@
   "name": "back",
   "version": "1.0.50",
   "scripts": {
-    "build": "bun build --target=bun ./src/index.ts --outfile=./dist/server.js",
-    "start": "bun dist/server.js",
+    "start": "bun build --target=bun ./src/index.ts --outfile=./dist/server.js && bun dist/server.js",
     "dev": "bun --watch src/index.ts"
   },
   "dependencies": {
@@ -16,5 +15,5 @@
   "devDependencies": {
     "bun-types": "latest"
   },
-  "module": "src/index.js"
+  "module": "dist/server.js"
 }

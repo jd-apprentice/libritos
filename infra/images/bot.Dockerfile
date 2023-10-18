@@ -9,7 +9,5 @@ COPY bot.js ./
 
 RUN bun install
 
-EXPOSE 3000
-
 ## Start the app
 CMD ["bun", "bot.js"]

@@ -8,6 +8,13 @@ const app = new Elysia()
   .use(html())
   .use(cors())
   .get("/", () => "Welcome to the Libritos API!")
+  .get("/health", () => {
+    return {
+      status: "OK",
+      uptime: process.uptime(),
+      timestamp: Date.now(),
+    };
+  })
   .get("/books", async ({ query }) => {
 
     const result = await db
