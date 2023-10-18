@@ -7,7 +7,7 @@ import { generateHTML } from "./utils/template";
 const app = new Elysia()
   .use(html())
   .use(cors())
-  .get("/", () => "Welcome to the Libritos API!")
+  .get("/v1/api", () => "Welcome to the Libritos API!")
   .get("/health", () => {
     return {
       status: "OK",
@@ -15,7 +15,7 @@ const app = new Elysia()
       timestamp: Date.now(),
     };
   })
-  .get("/books", async ({ query }) => {
+  .get("/", async ({ query }) => {
 
     const result = await db
       .selectFrom('books')
