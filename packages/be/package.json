@@ -3,6 +3,7 @@
   "version": "1.0.50",
   "scripts": {
     "build": "bun build --target=bun ./src/index.ts --outfile=./dist/server.js",
+    "build:render": "bun install && bun build --target=bun ./src/index.ts --outfile=./dist/server.js",
     "start": "bun dist/server.js",
     "dev": "bun --watch src/index.ts"
   },
