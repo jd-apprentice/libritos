@@ -2,7 +2,8 @@
     "name": "libritos",
     "version": "1.0.0",
     "scripts": {
-        "start": "lerna run start --concurrency=3"
+        "start": "lerna run start",
+        "build": "lerna run build"
     },
     "dependencies": {
         "lerna": "^7.4.0"
