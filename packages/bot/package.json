@@ -7,7 +7,8 @@
   "scripts": {
     "build": "bun build --target=bun ./bot.js --outfile=./dist/bot.js",
     "build:render": "bun install",
-    "start": "bun dist/bot.js",
+    "start": "bun src/index.js",
+    "start:build": "bun dist/bot.js",
     "dev": "bun --watch bot.js"
   },
   "keywords": [],
