@@ -34,9 +34,10 @@ import {
     isBot,
     isNotSelectedChannel,
     hasMoreThanOneAttachment,
-    fileExists, moreThan20MB
+    fileExists, moreThan20MB,
+    isValidMessage
 } from './utils/validations.js';
-import { nameGenerator } from './utils/generators.js';
+import { nameGenerator, imageAndDescriptionGenerator } from './utils/generators.js';
 
 /**
  * @example
@@ -87,7 +88,17 @@ export class LibraryBot {
         if (isBot(message)) return;
         if (isNotSelectedChannel(message, this._config.channelId)) return;
 
-        const { name, url, contentType } = message.attachments.first() || {};
+        if (!message.content) {
+            await message.reply('You are sending an empty message');
+            return;
+        }
+
+        if (!isValidMessage(message)) {
+            await message.reply('Please send a valid format, usage: ```image: <url>\ndescription: <description>```');
+            return;
+        }
+
+        const { name: fileName, url, contentType } = message.attachments.first() || {};
 
         if (!fileExists(message)) {
             await message.reply('Please send a file');
@@ -110,12 +121,26 @@ export class LibraryBot {
             return;
         }
 
+        const { image, description } = imageAndDescriptionGenerator(message);
+        const name = nameGenerator(fileName);
+
+        await db
+            .schema
+            .createTable(this._config.booksTable)
+            .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement())
+            .addColumn('name', 'string', (col) => col.notNull())
+            .addColumn('url', 'string', (col) => col.notNull())
+            .addColumn('description', 'text', (col) => col.notNull())
+            .addColumn('image', 'string', (col) => col.notNull())
+            .execute();
+
         const query = await db
             .insertInto(this._config.booksTable)
             .values({
-                name: nameGenerator(name),
+                name,
                 url,
-                description: message.content,
+                image,
+                description,
             })
             .execute()
 

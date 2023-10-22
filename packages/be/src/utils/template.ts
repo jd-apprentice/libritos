@@ -17,11 +17,12 @@ export function generateHTML(books: Book[]) {
               ${books.map((book, index) => `
                 <div class="col-lg-4 col-md-6 mb-4">
                   <div class="card">
+                    <img src="${book.image}" class="card-img-top" alt="${book.name}">
                     <div class="card-body">
                       <h5 class="card-title text-truncate">${book.name}</h5>
                       <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-outline-dark"> 
-                          <a target="_blank" href=${book.url} class="card-text text-decoration-none">Download</a>
+                          <a target="_blank" href="${book.url}" class="card-text text-decoration-none">Download</a>
                         </button>
                         <button class="btn btn-outline-info text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}" aria-expanded="false">
                           Show Description

@@ -21,6 +21,7 @@ export interface BookTable {
     name: string
     url: string
     description: string
+    image: string
 }
 
 export type Book = Selectable<BookTable>

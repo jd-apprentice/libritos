@@ -2,7 +2,8 @@ CREATE TABLE IF NOT EXISTS books (
     id INTEGER PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     url VARCHAR(255) NOT NULL,
-    description VARCHAR(255),
+    image VARCHAR(255) NOT NULL,
+    description VARCHAR(255) NOT NULL,
 );
 
 INSERT INTO books (id, name, url, description) VALUES
