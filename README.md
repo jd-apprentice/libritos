@@ -6,7 +6,15 @@
 
 - [About 📔](#about-)
 - [Deployment 🚀](#Deployment-)
+    - [Requirements 📋](#requirements-)
+        - [Create a cloudflare account and add your domain.](#create-a-cloudflare-account-and-add-your-domain)
+        - [Create a turso account and run the script `turso-start.sh`](#create-a-turso-account-and-run-the-script-turso-startsh)
+        - [Create a render account and add the repository](#create-a-render-account-and-add-the-repository)
+        - [Create a discord bot and add it to your server](#create-a-discord-bot-and-add-it-to-your-server)
+        - [Deployment outside of render](#deployment-outside-of-render)
 - [Usage](#usage)
+    - [Discord Bot 🤖](#discord-bot-)
+    - [Web Application 🌐](#web-application-)
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
@@ -86,6 +94,12 @@ Bot is going to need the following permissions in the `OAuth2` section
 Then in the `Bot` section make sure message intents are enabled like this
 
 ![intents](static/images/intents.png)
+
+#### Deployment outside of render
+
+Since i've built this application with docker in mind you can deploy it anywhere you want as long as you have docker installed or the service that you are using supports dockerfiles.
+
+In case you are using another service or your own server make sure the use the `"build:others": "lerna run build:others"` from lerna to build the project, since the default build is for render, which in the background i've added a `bun install` to install the dependencies since render doesn't install them by default.
 
 # Usage 📖
 
