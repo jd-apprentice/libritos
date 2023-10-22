@@ -10,7 +10,7 @@
 - [Deployment 🚀](#Deployment-)
     - [Requirements 📋](#requirements-)
         - [Create a cloudflare account and add your domain.](#create-a-cloudflare-account-and-add-your-domain)
-        - [Create a turso account and run the script `turso-start.sh`](#create-a-turso-account-and-run-the-script-turso-startsh)
+        - [Create a turso account and run the script `npm run migration`](#create-a-turso-account-and-run-the-script-turso-startsh)
         - [Create a render account and add the repository](#create-a-render-account-and-add-the-repository)
         - [Create a discord bot and add it to your server](#create-a-discord-bot-and-add-it-to-your-server)
         - [Deployment outside of render](#deployment-outside-of-render)
