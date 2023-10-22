@@ -31,6 +31,8 @@ The discord bot is set at a specific channel and it will listen to files such as
 
 ## Requirements 📋
 
+- Node >20.6.0 [Link](https://nodejs.org)
+- Bun >1.0 [Link](https://bun.sh)
 - Cloudflare [Link](https://cloudflare.com)
 - Turso [Link](https://turso.tech)
 - Github [Link](https://github.com)

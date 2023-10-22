@@ -6,7 +6,8 @@
         "build": "lerna run build:render",
         "build:others": "lerna run build:others",
         "dev": "lerna run dev",
-        "migration": "sh scripts/turso-start.sh"
+        "bootstrap": "lerna run install",
+        "migration": "npm i && npm run bootstrap && sh scripts/turso-start.sh"
     },
     "dependencies": {
         "lerna": "^7.4.0"
