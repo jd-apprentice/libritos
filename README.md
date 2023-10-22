@@ -33,7 +33,7 @@ The discord bot is set at a specific channel and it will listen to files such as
 
 - Cloudflare [Link](https://cloudflare.com)
 - Turso [Link](https://turso.tech)
-- Repository [Link](https://github.com)
+- Github [Link](https://github.com)
 - Render [Link](https://render.com)
 - Discord [Link](https://discord.com/developers/applications)
 
@@ -45,7 +45,29 @@ The domain should point to the render deployment something like this
 
 So in my case the website will be available at `https://libritos.jonathan.com.ar`
 
-### Create a turso account and run the script `turso-start.sh`
+### Create a turso account and run the script `npm run migration`
+
+In the root of the project run the following command
+
+```bash
+npm run migration
+```
+
+Turso only works with github so if you don't have a github account sorry! But you will have to create one.
+
+![turso](static/images/turso_login.png)
+
+First time you run the script you will see something like this
+
+![prompt turso](static/images/prompt_turso.png)
+
+The turso CLI will open a browser tab and ask you to authorize the application with github.
+
+Now the script will run a function to create the database with the proper schema and then obtain the url/token of the database.
+
+After everything is set you will see something like this
+
+![finish](/static/images/finish.png)
 
 ### Create a render account and add the repository
 

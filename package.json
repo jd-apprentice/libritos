@@ -5,7 +5,8 @@
         "start": "lerna run start",
         "build": "lerna run build:render",
         "build:others": "lerna run build:others",
-        "dev": "lerna run dev"
+        "dev": "lerna run dev",
+        "migration": "sh scripts/turso-start.sh"
     },
     "dependencies": {
         "lerna": "^7.4.0"
