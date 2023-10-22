@@ -1,6 +1,8 @@
 # 📚 Libritos
 
-![img](wallpaper.png)
+<p align="center">
+  <img width="500" height="500" src="static/images/logo.png">
+</p>
 
 # Table of Contents 📚
 
