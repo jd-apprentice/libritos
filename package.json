@@ -4,6 +4,7 @@
     "scripts": {
         "start": "lerna run start",
         "build": "lerna run build:render",
+        "build:others": "lerna run build:others",
         "dev": "lerna run dev"
     },
     "dependencies": {
