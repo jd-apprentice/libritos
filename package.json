@@ -3,7 +3,8 @@
     "version": "1.0.0",
     "scripts": {
         "start": "lerna run start",
-        "build": "lerna run build:render"
+        "build": "lerna run build",
+        "build:render": "lerna run build:render"
     },
     "dependencies": {
         "lerna": "^7.4.0"

@@ -1,0 +1,6 @@
+version: 1
+sshPreserveHosts: true
+profiles:
+  default:
+    defaultRegion: oregon
+    apiKey: <your api key>
