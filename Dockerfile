@@ -24,7 +24,7 @@ RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
 ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
 ENV PATH="/root/.bun/bin/:${PATH}"
 
-RUN npm run bootstrap
+RUN npm ci --ignore-scripts --omit=dev
 RUN npm run build
 
 COPY . .
