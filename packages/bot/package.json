@@ -10,7 +10,7 @@
     "build:others": "echo Build for the bot not working yet. 🧰",
     "start": "bun bot.js",
     "start:build": "bun dist/bot.js",
-    "install": "npm run build:render",
+    "migration": "npm run build:render",
     "dev": "bun --watch bot.js"
   },
   "keywords": [],

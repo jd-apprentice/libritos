@@ -3,12 +3,10 @@
     "version": "1.0.0",
     "scripts": {
         "start": "lerna run start",
-        "build": "npm run build:bot && npm run build:bender",
-        "build:bot": "cd packages/bot && npm run build",
-        "build:bender": "cd packages/be && npm run build",
+        "build": "lerna run build",
         "build:others": "lerna run build:others",
         "dev": "lerna run dev",
-        "bootstrap": "lerna run install",
+        "bootstrap": "lerna run migration",
         "migration": "npm i && npm run bootstrap && sh scripts/turso-start.sh"
     },
     "dependencies": {
