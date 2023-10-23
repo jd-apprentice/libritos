@@ -124,16 +124,6 @@ export class LibraryBot {
         const { image, description } = imageAndDescriptionGenerator(message);
         const name = nameGenerator(fileName);
 
-        await db
-            .schema
-            .createTable(this._config.booksTable)
-            .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement())
-            .addColumn('name', 'string', (col) => col.notNull())
-            .addColumn('url', 'string', (col) => col.notNull())
-            .addColumn('description', 'text', (col) => col.notNull())
-            .addColumn('image', 'string', (col) => col.notNull())
-            .execute();
-
         const query = await db
             .insertInto(this._config.booksTable)
             .values({
