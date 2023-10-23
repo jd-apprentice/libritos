@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY packages ./packages
 COPY lerna.json ./
-COPY package.json ./
+COPY package*.json ./
 
 RUN apt-get update && apt-get install -y curl unzip
 
