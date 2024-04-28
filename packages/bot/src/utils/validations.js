@@ -45,3 +45,20 @@ export const moreThan20MB = (message) => message.attachments.first().size > 2000
  */
 
 export const isValidMessage = (message) => regexImageAndDescription.test(message.content);
+
+/**
+ * @description Check if the message has content
+ * @param {string} message - The message to be checked
+ * @returns { boolean }
+ */
+
+export const messageExists = (message) => message.content;
+
+/**
+ * @description Check if the file has a valid format
+ * @param {string} contentType - The content type of the file
+ * @param {string[]} allowedFormarts - The allowed formats
+ * @returns { boolean }
+ */
+
+export const isValidFormat = (contentType, allowedFormarts) => contentType.includes(allowedFormarts);

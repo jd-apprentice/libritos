@@ -35,7 +35,9 @@ import {
     isNotSelectedChannel,
     hasMoreThanOneAttachment,
     fileExists, moreThan20MB,
-    isValidMessage
+    isValidMessage,
+    messageExists,
+    isValidFormat
 } from './utils/validations.js';
 import { nameGenerator, imageAndDescriptionGenerator } from './utils/generators.js';
 
@@ -47,6 +49,7 @@ import { nameGenerator, imageAndDescriptionGenerator } from './utils/generators.
     const bot = new LibraryBot({
         config
     });
+
     bot.start();
     @description This is the main class of the bot, it is responsible for starting the bot and listening to the events
     @param {Object} options - Options for the bot
@@ -60,10 +63,12 @@ import { nameGenerator, imageAndDescriptionGenerator } from './utils/generators.
 
 // https://github.com/oven-sh/bun/issues/4760#issuecomment-1712752276
 export class LibraryBot {
+    #config;
+    #client;
+
     constructor(options = {}) {
-        this._options = options;
-        this._config = options.config;
-        this._client = new Client({
+        this.#config = options.config;
+        this.#client = new Client({
             intents: [
                 GatewayIntentBits.Guilds,
                 GatewayIntentBits.GuildMessages,
@@ -71,24 +76,35 @@ export class LibraryBot {
             ],
         });
 
-        this._client.login(this._config.token);
-        this._client.on('ready', this._onReady.bind(this));
-        this._client.on('messageCreate', this._onMessage.bind(this));
+        this.#client.login(this.#config.token);
+        this.#client.on('ready', this.#onReady.bind(this));
+        this.#client.on('messageCreate', this.#onMessage.bind(this));
     }
 
     async start() {
         db.connection();
-    }
+    };
 
-    async _onReady() {
-        console.log(`Logged in as ${this._client.user.tag}!`);
-    }
+    async #executeQuery(database, query, message) {
+        try {
+            const result = await database.insertInto(this.#config.booksTable).values(query).execute();
+            return result;
+        } catch (error) {
+            console.error(error);
+            message.reply('An error occurred while saving the file');
+            return;
+        }
+    };
 
-    async _onMessage(message) {
+    async #onReady() {
+        console.log(`Logged in as ${this.#client.user.tag}!`);
+    };
+
+    async #onMessage(message) {
         if (isBot(message)) return;
-        if (isNotSelectedChannel(message, this._config.channelId)) return;
+        if (isNotSelectedChannel(message, this.#config.channelId)) return;
 
-        if (!message.content) {
+        if (!messageExists(message)) {
             await message.reply('You are sending an empty message');
             return;
         }
@@ -111,7 +127,7 @@ export class LibraryBot {
         }
 
 
-        if (!this._config.allowedFormarts.includes(contentType)) {
+        if (!isValidFormat(contentType, this.#config.allowedFormarts)) {
             await message.reply('Please send a valid file');
             return;
         }
@@ -124,20 +140,12 @@ export class LibraryBot {
         const { image, description } = imageAndDescriptionGenerator(message);
         const name = nameGenerator(fileName);
 
-        const query = await db
-            .insertInto(this._config.booksTable)
-            .values({
-                name,
-                url,
-                image,
-                description,
-            })
-            .execute()
-
-        if (!query) {
-            await message.reply('Error saving file');
-            return;
-        }
+        this.#executeQuery(db, {
+            name,
+            url,
+            image,
+            description,
+        }, message);
 
         await message.reply('File saved');
         return;
