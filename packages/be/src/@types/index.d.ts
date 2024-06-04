@@ -24,6 +24,12 @@ export interface BookTable {
     image: string
 }
 
+
+export interface Query {
+    offset?: number;
+    limit?: number;
+}
+
 export type Book = Selectable<BookTable>
 export type NewBook = Insertable<BookTable>
 export type BookUpdate = Updateable<BookTable>
