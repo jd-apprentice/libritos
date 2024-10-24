@@ -148,6 +148,5 @@ export class LibraryBot {
         }, message);
 
         await message.reply('File saved');
-        return;
     }
 }
