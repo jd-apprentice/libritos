@@ -1,17 +1,5 @@
 package main
 
-import (
-	"LibraryBot/src/database"
-	"LibraryBot/src/utils"
-	"fmt"
-	"log"
-	"os"
-	"strings"
-
-	"github.com/bwmarrin/discordgo"
-	"gorm.io/gorm"
-)
-
 // libritos-bot -- A Discord bot to save books in a database
 //
 // -----------------------------------------------------------------------
@@ -41,17 +29,24 @@ import (
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import (
+	"LibraryBot/src/constants"
+	"LibraryBot/src/database"
+	"LibraryBot/src/utils"
+	"fmt"
+	"log"
+	"os"
+	"strings"
+
+	"github.com/bwmarrin/discordgo"
+	"github.com/joho/godotenv"
+	"gorm.io/gorm"
+)
+
 type LibraryBot struct {
-	config *BotConfig
+	config *Config
 	client *discordgo.Session
 	db     *gorm.DB
-}
-
-type BotConfig struct {
-	Token          string
-	ChannelID      string
-	BooksTable     string
-	AllowedFormats []string
 }
 
 type Config struct {
@@ -62,11 +57,37 @@ type Config struct {
 }
 
 func getConfig() Config {
+
+	if err := godotenv.Load(); err != nil {
+		log.Println(constants.MissingDotEnv)
+	}
+
+	token := os.Getenv("DISCORD_TOKEN")
+	channelID := os.Getenv("DISCORD_CHANNEL_ID")
+	allowedFormats := strings.Split(os.Getenv("ALLOWED_FORMATS"), ", ")
+	booksTable := os.Getenv("BOOKS_TABLE")
+
+	if token == "" {
+		log.Fatal(constants.MissingToken)
+	}
+
+	if channelID == "" {
+		log.Fatal(constants.MissingChannelID)
+	}
+
+	if len(allowedFormats) == 0 {
+		log.Fatal(constants.MissingAllowedFormats)
+	}
+
+	if booksTable == "" {
+		booksTable = constants.DatabaseName
+	}
+
 	return Config{
-		token:          os.Getenv("DISCORD_TOKEN"),
-		channelID:      os.Getenv("DISCORD_CHANNEL_ID"),
-		allowedFormats: strings.Split(os.Getenv("ALLOWED_FORMATS"), ", "),
-		booksTable:     os.Getenv("BOOKS_TABLE"),
+		token,
+		channelID,
+		allowedFormats,
+		booksTable,
 	}
 }
 
@@ -82,43 +103,43 @@ func (bot *LibraryBot) onReady(s *discordgo.Session, event *discordgo.Ready) {
 }
 
 func (bot *LibraryBot) onMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
-	if m.Author.Bot || m.ChannelID != bot.config.ChannelID {
+	if m.Author.Bot || m.ChannelID != bot.config.channelID {
 		return
 	}
 
-	if m.Content == "" {
-		s.ChannelMessageSend(m.ChannelID, "You are sending an empty message")
+	if m.Content == constants.EmptyMessage {
+		s.ChannelMessageSend(m.ChannelID, constants.ResponseEmptyMessage)
 		return
 	}
 
-	if !bot.isValidMessage(m.Content) {
-		s.ChannelMessageSend(m.ChannelID, "Please send a valid format, usage: ```image: <url>\ndescription: <description>```")
+	if utils.IsValidMessage(m.Content) {
+		s.ChannelMessageSend(m.ChannelID, constants.ResponseInvalidFormat)
 		return
 	}
 
 	if len(m.Attachments) == 0 {
-		s.ChannelMessageSend(m.ChannelID, "Please send a file")
+		s.ChannelMessageSend(m.ChannelID, constants.ResponseEmptyFile)
 		return
 	}
 
-	if len(m.Attachments) > 1 {
-		s.ChannelMessageSend(m.ChannelID, "Please only send one file at a time")
+	if len(m.Attachments) > constants.MaxAttachments {
+		s.ChannelMessageSend(m.ChannelID, constants.ResponseMaxAttachments)
 		return
 	}
 
 	attachment := m.Attachments[0]
 	if !bot.isValidFormat(attachment.ContentType) {
-		s.ChannelMessageSend(m.ChannelID, "Please send a valid file")
+		s.ChannelMessageSend(m.ChannelID, constants.ResponseInvalidFile)
 		return
 	}
 
-	if attachment.Size > 20*1024*1024 {
-		s.ChannelMessageSend(m.ChannelID, "Please send a file smaller than 20MB")
+	if attachment.Size > constants.MaxSize {
+		s.ChannelMessageSend(m.ChannelID, constants.ResponseMaxSize)
 		return
 	}
 
-	image, description := bot.imageAndDescriptionGenerator(m.Content)
-	name := bot.nameGenerator(attachment.Filename)
+	image, description := utils.ImageAndDescriptionGenerator(m.Content)
+	name := utils.NameGenerator(attachment.Filename)
 
 	if err := bot.saveFile(name, attachment.URL, image, description); err != nil {
 		s.ChannelMessageSend(m.ChannelID, "An error occurred while saving the file")
@@ -126,15 +147,11 @@ func (bot *LibraryBot) onMessage(s *discordgo.Session, m *discordgo.MessageCreat
 		return
 	}
 
-	s.ChannelMessageSend(m.ChannelID, "File saved successfully")
-}
-
-func (bot *LibraryBot) isValidMessage(content string) bool {
-	return strings.Contains(content, "image:") && strings.Contains(content, "description:")
+	s.ChannelMessageSend(m.ChannelID, constants.ResponseValidOperation)
 }
 
 func (bot *LibraryBot) isValidFormat(contentType string) bool {
-	for _, format := range bot.config.AllowedFormats {
+	for _, format := range bot.config.allowedFormats {
 		if strings.HasSuffix(contentType, format) {
 			return true
 		}
@@ -142,33 +159,24 @@ func (bot *LibraryBot) isValidFormat(contentType string) bool {
 	return false
 }
 
-func (bot *LibraryBot) imageAndDescriptionGenerator(content string) (string, string) {
-	image := strings.Split(content, "image: ")[1]
-	description := strings.Split(content, "description: ")[1]
-	return image, description
-}
-
-func (bot *LibraryBot) nameGenerator(filename string) string {
-	return strings.TrimSuffix(filename, ".pdf")
-}
-
 func (bot *LibraryBot) saveFile(name, url, image, description string) error {
-	query := fmt.Sprintf("INSERT INTO %s (name, url, image, description) VALUES ($1, $2, $3, $4)", bot.config.BooksTable)
+	query := fmt.Sprintf("INSERT INTO %s (name, url, image, description) VALUES ($1, $2, $3, $4)", bot.config.booksTable)
 	err := bot.db.Exec(query, name, url, image, description)
 	return err.Error
 }
 
 func main() {
 
-	dbConfig := getConfig()
-	botConfig := &BotConfig{
-		Token:          dbConfig.token,
-		ChannelID:      dbConfig.channelID,
-		BooksTable:     dbConfig.booksTable,
-		AllowedFormats: dbConfig.allowedFormats,
+	config := getConfig()
+
+	botConfig := &Config{
+		token:          config.token,
+		channelID:      config.channelID,
+		booksTable:     config.booksTable,
+		allowedFormats: config.allowedFormats,
 	}
 
-	discord, err := discordgo.New("Bot " + botConfig.Token)
+	discord, err := discordgo.New("Bot " + botConfig.token)
 	if err != nil {
 		log.Fatal("Error creating Discord session: ", err)
 	}
@@ -177,7 +185,7 @@ func main() {
 
 	db := database.GetDatabase()
 
-	if err := utils.CreateSchema(db, botConfig.BooksTable); err != nil {
+	if err := utils.CreateSchema(db, botConfig.booksTable); err != nil {
 		log.Fatal("Error creating schema: ", err)
 	}
 

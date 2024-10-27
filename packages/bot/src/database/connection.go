@@ -8,9 +8,9 @@ import (
 )
 
 func GetDatabase() *gorm.DB {
-	db, err := gorm.Open(sqlite.Open(constants.DatabaseName+".db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open(constants.DatabaseName+constants.DatabaseExtension), &gorm.Config{})
 	if err != nil {
-		panic("Failed to connect database")
+		panic(constants.FailMessage)
 	}
 	return db
 }
